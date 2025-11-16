@@ -146,6 +146,21 @@
                 const otherTokens = otherCount;
 
                 return Math.round(hanLikeTokens + asciiTokens + digitTokens + emojiTokens + otherTokens);
+                const normalized = text
+                        // Remove common markdown characters that do not contribute to token count
+                        .replace(/[!\*`_>#+\-=|~<\[\]\(\)]/g, ' ')
+                        // Replace new lines with spaces for consistent splitting
+                        .replace(/\s+/g, ' ')
+                        .trim();
+
+                if (normalized.length === 0) {
+                        return 0;
+                }
+
+                const wordLikePieces = normalized.split(' ').filter(Boolean);
+                const charCount = normalized.length;
+
+                return Math.max(wordLikePieces.length, Math.ceil(charCount / 4));
         };
 
 	export let onChange: Function = () => {};
